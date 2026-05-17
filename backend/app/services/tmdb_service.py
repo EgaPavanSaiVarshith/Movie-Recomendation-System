@@ -19,7 +19,9 @@ LANGUAGE_MAP = {
 OTT_PROVIDER_MAP = {
     8: "Netflix", 9: "Amazon Prime", 337: "Disney+", 15: "Hulu",
     350: "Apple TV+", 2: "Apple iTunes", 3: "Google Play",
-    192: "YouTube", 11: "MUBI", 384: "HBO Max"
+    192: "YouTube", 11: "MUBI", 384: "HBO Max",
+    122: "Hotstar", 119: "Amazon Prime Video", 220: "JioCinema",
+    232: "Zee5", 531: "Aha", 121: "SonyLIV", 309: "Sun Nxt"
 }
 
 async def fetch_tmdb(endpoint: str, params: dict = {}) -> dict:
@@ -96,12 +98,22 @@ async def get_movie_details(movie_id: int) -> dict:
         if trailers:
             movie["trailer_key"] = trailers[0].get("key")
         
-        # Extract OTT platforms (US region)
+        # Extract OTT platforms (India & US regions)
         providers_data = raw.get("watch/providers", {}).get("results", {})
+        in_providers = providers_data.get("IN", {}).get("flatrate", [])
         us_providers = providers_data.get("US", {}).get("flatrate", [])
+        
+        seen_ids = set()
+        combined_providers = []
+        for p in (in_providers + us_providers):
+            pid = p.get("provider_id")
+            if pid not in seen_ids:
+                seen_ids.add(pid)
+                combined_providers.append(p)
+                
         movie["ott_platforms"] = [
             OTT_PROVIDER_MAP.get(p.get("provider_id"), p.get("provider_name"))
-            for p in us_providers
+            for p in combined_providers
         ]
         
         return movie
