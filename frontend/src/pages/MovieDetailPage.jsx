@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Star, Play, Bookmark, BookmarkCheck, Clock, Globe, ChevronLeft } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { moviesAPI, recsAPI } from '../api/client'
+import { moviesAPI, recsAPI, getProxyImageUrl } from '../api/client'
 import { useAuthStore, useWatchlistStore } from '../store'
 import { watchlistAPI } from '../api/client'
 import MovieRow from '../components/MovieRow'
@@ -99,7 +99,7 @@ export default function MovieDetailPage() {
       {/* Backdrop */}
       <div className="relative h-[50vh] md:h-[65vh] overflow-hidden">
         {movie.backdrop_path && (
-          <img src={movie.backdrop_path} alt={movie.title} className="w-full h-full object-cover" />
+          <img src={getProxyImageUrl(movie.backdrop_path)} alt={movie.title} className="w-full h-full object-cover" />
         )}
         <div className="absolute inset-0 bg-hero-gradient" />
         <div className="absolute inset-0 bg-gradient-to-r from-cinema-bg via-cinema-bg/60 to-transparent" />
@@ -125,7 +125,7 @@ export default function MovieDetailPage() {
           {/* Poster */}
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="flex-shrink-0 mx-auto md:mx-0">
             <div className="w-48 md:w-64 rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10">
-              <img src={movie.poster_path || `https://via.placeholder.com/300x450/1a1a2e/666?text=${encodeURIComponent(movie.title)}`}
+              <img src={movie.poster_path ? getProxyImageUrl(movie.poster_path) : `https://via.placeholder.com/300x450/1a1a2e/666?text=${encodeURIComponent(movie.title)}`}
                 alt={movie.title} className="w-full h-full object-cover"
                 onError={e => { e.target.src = `https://via.placeholder.com/300x450/1a1a2e/666?text=${encodeURIComponent(movie.title)}` }}
               />
@@ -217,7 +217,7 @@ export default function MovieDetailPage() {
                 <div key={actor.id} className="flex-shrink-0 w-28 text-center">
                   <div className="w-20 h-20 rounded-full overflow-hidden mx-auto mb-2 ring-2 ring-white/10">
                     {actor.profile_path
-                      ? <img src={actor.profile_path} alt={actor.name} className="w-full h-full object-cover" />
+                      ? <img src={getProxyImageUrl(actor.profile_path)} alt={actor.name} className="w-full h-full object-cover" />
                       : <div className="w-full h-full bg-zinc-800 flex items-center justify-center text-2xl font-bold text-zinc-500">{actor.name[0]}</div>
                     }
                   </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Play, Info, ChevronLeft, ChevronRight, Star, Volume2, VolumeX } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { moviesAPI, recsAPI } from '../api/client'
+import { moviesAPI, recsAPI, getProxyImageUrl } from '../api/client'
 import { useAuthStore } from '../store'
 import MovieRow from '../components/MovieRow'
 
@@ -111,7 +111,7 @@ export default function HomePage() {
               className="absolute inset-0"
             >
               <img
-                src={hero.backdrop_path || hero.poster_path}
+                src={getProxyImageUrl(hero.backdrop_path || hero.poster_path)}
                 alt={hero.title}
                 className="w-full h-full object-cover"
               />

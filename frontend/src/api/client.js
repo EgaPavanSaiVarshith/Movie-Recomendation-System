@@ -1,9 +1,16 @@
 import axios from 'axios'
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000',
+  baseURL: API_BASE_URL,
   timeout: 15000,
 })
+
+export const getProxyImageUrl = (url) => {
+  if (!url) return null;
+  return `${API_BASE_URL}/api/movies/proxy-image?url=${encodeURIComponent(url)}`;
+}
 
 // Attach auth token
 API.interceptors.request.use((config) => {

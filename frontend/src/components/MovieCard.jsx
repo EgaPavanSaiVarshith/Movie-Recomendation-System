@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Bookmark, BookmarkCheck, Star, Play } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useAuthStore, useWatchlistStore } from '../store'
-import { watchlistAPI } from '../api/client'
+import { watchlistAPI, getProxyImageUrl } from '../api/client'
 import toast from 'react-hot-toast'
 
 export default function MovieCard({ movie, index = 0, size = 'normal' }) {
@@ -30,7 +30,7 @@ export default function MovieCard({ movie, index = 0, size = 'normal' }) {
     }
   }
 
-  const poster = movie.poster_path || `https://via.placeholder.com/300x450/1a1a2e/666?text=${encodeURIComponent(movie.title)}`
+  const poster = movie.poster_path ? getProxyImageUrl(movie.poster_path) : `https://via.placeholder.com/300x450/1a1a2e/666?text=${encodeURIComponent(movie.title)}`
   const rating = movie.vote_average || 0
   const year = movie.release_date?.slice(0, 4) || ''
   const genres = movie.genres?.slice(0, 2) || []

@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Query, HTTPException, Depends
+from fastapi import APIRouter, Query, HTTPException, Depends, Response
 from typing import Optional, List
+import httpx
 from app.services.tmdb_service import (
     search_movies, get_movie_details, get_trending_movies,
     get_movies_by_language, get_popular_movies, get_top_rated_movies,
@@ -42,6 +43,19 @@ async def top_rated(page: int = 1):
 async def now_playing(page: int = 1):
     movies = await get_now_playing_movies(page)
     return {"movies": movies, "page": page}
+
+@router.get("/proxy-image")
+async def proxy_image(url: str):
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url, timeout=10.0)
+            if response.status_code == 200:
+                return Response(content=response.content, media_type=response.headers.get("content-type", "image/jpeg"))
+            else:
+                raise HTTPException(status_code=response.status_code, detail="Failed to fetch image")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 @router.get("/by-language/{language}")
 async def by_language(language: str, page: int = 1):
