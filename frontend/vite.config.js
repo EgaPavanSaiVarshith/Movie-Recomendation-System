@@ -9,6 +9,11 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:8000',
         changeOrigin: true,
+      },
+      '/tmdb-image': {
+        target: 'https://image.tmdb.org/t/p',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/tmdb-image/, ''),
       }
     }
   }

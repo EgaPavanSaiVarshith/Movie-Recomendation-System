@@ -14,6 +14,10 @@
   ],
   "rewrites": [
     {
+      "source": "/tmdb-image/(.*)",
+      "destination": "https://image.tmdb.org/t/p/$1"
+    },
+    {
       "source": "/api/(.*)",
       "destination": "/backend/main.py"
     },

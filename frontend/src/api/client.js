@@ -9,6 +9,11 @@ const API = axios.create({
 })
 
 export const getProxyImageUrl = (url) => {
+  if (!url) return url;
+  if (url.includes('image.tmdb.org/t/p/')) {
+    const path = url.split('image.tmdb.org/t/p/')[1];
+    return `/tmdb-image/${path}`;
+  }
   return url;
 }
 
