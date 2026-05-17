@@ -3,7 +3,7 @@ from typing import Optional, List
 from app.services.tmdb_service import (
     search_movies, get_movie_details, get_trending_movies,
     get_movies_by_language, get_popular_movies, get_top_rated_movies,
-    get_similar_movies
+    get_similar_movies, get_now_playing_movies
 )
 from app.core.database import get_database
 from app.core.security import get_current_user
@@ -36,6 +36,11 @@ async def popular(page: int = 1):
 @router.get("/top-rated")
 async def top_rated(page: int = 1):
     movies = await get_top_rated_movies(page)
+    return {"movies": movies, "page": page}
+
+@router.get("/now-playing")
+async def now_playing(page: int = 1):
+    movies = await get_now_playing_movies(page)
     return {"movies": movies, "page": page}
 
 @router.get("/by-language/{language}")

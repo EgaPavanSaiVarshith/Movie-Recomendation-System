@@ -33,6 +33,7 @@ export default function HomePage() {
   const [heroMovies, setHeroMovies] = useState([])
   const [heroIndex, setHeroIndex] = useState(0)
   const [trending, setTrending] = useState([])
+  const [nowPlaying, setNowPlaying] = useState([])
   const [popular, setPopular] = useState([])
   const [topRated, setTopRated] = useState([])
   const [moodMovies, setMoodMovies] = useState([])
@@ -47,14 +48,16 @@ export default function HomePage() {
     const fetchAll = async () => {
       setLoading(true)
       try {
-        const [trendRes, popRes, topRes] = await Promise.all([
+        const [trendRes, nowPlayRes, popRes, topRes] = await Promise.all([
           moviesAPI.trending('week'),
+          moviesAPI.nowPlaying(),
           moviesAPI.popular(),
           moviesAPI.topRated(),
         ])
         const trendMovies = trendRes.data.movies || []
         setTrending(trendMovies)
         setHeroMovies(trendMovies.slice(0, 5))
+        setNowPlaying(nowPlayRes.data.movies || [])
         setPopular(popRes.data.movies || [])
         setTopRated(topRes.data.movies || [])
       } catch (err) { console.error(err) }
@@ -224,6 +227,9 @@ export default function HomePage() {
 
         {/* Trending */}
         <MovieRow title="🔥 Trending This Week" movies={trending} loading={loading} badge="LIVE" />
+
+        {/* Now Playing */}
+        <MovieRow title="🎬 New Releases In Theaters" movies={nowPlaying} loading={loading} badge="NEW" />
 
         {/* Language selector */}
         <section className="mb-10">

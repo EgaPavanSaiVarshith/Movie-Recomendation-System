@@ -37,6 +37,7 @@ export const authAPI = {
 export const moviesAPI = {
   search: (q, page = 1) => API.get('/api/movies/search', { params: { q, page } }),
   trending: (period = 'week') => API.get('/api/movies/trending', { params: { period } }),
+  nowPlaying: (page = 1) => API.get('/api/movies/now-playing', { params: { page } }),
   popular: (page = 1) => API.get('/api/movies/popular', { params: { page } }),
   topRated: (page = 1) => API.get('/api/movies/top-rated', { params: { page } }),
   details: (id) => API.get(`/api/movies/${id}`),

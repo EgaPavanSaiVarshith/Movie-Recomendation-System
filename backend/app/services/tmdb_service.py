@@ -42,7 +42,8 @@ def get_language_name(code: str) -> str:
 def get_image_url(path: Optional[str], size: str = "w500") -> Optional[str]:
     if not path:
         return None
-    return f"https://image.tmdb.org/t/p/{size}{path}"
+    # Use weserv.nl to bypass TMDB image blocking in certain regions (like India)
+    return f"https://images.weserv.nl/?url=image.tmdb.org/t/p/{size}{path}"
 
 def format_movie(raw: dict) -> dict:
     genre_ids = raw.get("genre_ids", [])
@@ -160,4 +161,12 @@ async def get_top_rated_movies(page: int = 1) -> List[dict]:
         return [format_movie(m) for m in data.get("results", [])]
     except Exception as e:
         print(f"Top rated error: {e}")
+        return []
+
+async def get_now_playing_movies(page: int = 1) -> List[dict]:
+    try:
+        data = await fetch_tmdb("/movie/now_playing", {"page": page})
+        return [format_movie(m) for m in data.get("results", [])]
+    except Exception as e:
+        print(f"Now playing error: {e}")
         return []
