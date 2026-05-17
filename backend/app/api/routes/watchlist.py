@@ -5,7 +5,7 @@ from app.services.tmdb_service import get_movie_details
 
 router = APIRouter()
 
-@router.get("/")
+@router.get("")
 async def get_watchlist(current_user: dict = Depends(get_current_user)):
     watchlist_ids = current_user.get("watchlist", [])
     movies = []

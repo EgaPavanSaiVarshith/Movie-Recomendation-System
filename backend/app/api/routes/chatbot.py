@@ -67,7 +67,7 @@ def get_bot_response(message: str) -> dict:
 
     return {"reply": RESPONSES["default"], "suggestions": ["Telugu movies", "Mood-based", "Action movies", "Trending now"]}
 
-@router.post("/")
+@router.post("")
 async def chat(body: ChatMessage):
     if not body.message.strip():
         raise HTTPException(status_code=400, detail="Message cannot be empty")
