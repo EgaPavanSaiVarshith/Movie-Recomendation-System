@@ -9,5 +9,11 @@
             "entrypoint": "backend",
             "routePrefix": "/_/backend"
         }
-    }
+    },
+    "rewrites": [
+        {
+            "source": "/tmdb-image/(.*)",
+            "destination": "https://image.tmdb.org/t/p/$1"
+        }
+    ]
 }
