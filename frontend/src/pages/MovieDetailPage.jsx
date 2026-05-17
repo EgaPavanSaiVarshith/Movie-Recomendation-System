@@ -108,14 +108,6 @@ export default function MovieDetailPage() {
         <button onClick={() => navigate(-1)} className="absolute top-24 left-6 glass p-2.5 rounded-xl hover:bg-white/15 transition-all">
           <ChevronLeft size={20} className="text-white" />
         </button>
-
-        {/* Trailer player */}
-        {showTrailer && movie.trailer_key && (
-          <div className="absolute inset-0 z-10 bg-black flex items-center justify-center">
-            <button onClick={() => setShowTrailer(false)} className="absolute top-4 right-4 p-2 bg-white/20 rounded-xl text-white z-20 hover:bg-white/30">✕</button>
-            <ReactPlayer url={`https://www.youtube.com/watch?v=${movie.trailer_key}`} playing controls width="100%" height="100%" />
-          </div>
-        )}
       </div>
 
       {/* Main content */}
@@ -234,6 +226,16 @@ export default function MovieDetailPage() {
           <MovieRow title="🎬 You Might Also Like" movies={similar} />
         </div>
       </div>
+
+      {/* Full-screen Trailer Modal */}
+      {showTrailer && movie.trailer_key && (
+        <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center backdrop-blur-md p-4">
+          <div className="relative w-full max-w-4xl aspect-video rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+            <button onClick={() => setShowTrailer(false)} className="absolute top-4 right-4 p-2 bg-black/60 rounded-xl text-white z-20 hover:bg-white/20 transition-colors">✕</button>
+            <ReactPlayer url={`https://www.youtube.com/watch?v=${movie.trailer_key}`} playing={true} controls={true} width="100%" height="100%" />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
