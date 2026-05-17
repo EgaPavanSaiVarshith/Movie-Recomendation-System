@@ -42,8 +42,7 @@ def get_language_name(code: str) -> str:
 def get_image_url(path: Optional[str], size: str = "w500") -> Optional[str]:
     if not path:
         return None
-    # Use weserv.nl to bypass TMDB image blocking in certain regions (like India)
-    return f"https://images.weserv.nl/?url=image.tmdb.org/t/p/{size}{path}"
+    return f"https://image.tmdb.org/t/p/{size}{path}"
 
 def format_movie(raw: dict) -> dict:
     genre_ids = raw.get("genre_ids", [])
