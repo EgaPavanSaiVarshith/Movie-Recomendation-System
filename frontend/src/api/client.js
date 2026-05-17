@@ -9,8 +9,7 @@ const API = axios.create({
 })
 
 export const getProxyImageUrl = (url) => {
-  if (!url) return null;
-  return `${API_BASE_URL}/api/movies/proxy-image?url=${encodeURIComponent(url)}`;
+  return url;
 }
 
 // Attach auth token
