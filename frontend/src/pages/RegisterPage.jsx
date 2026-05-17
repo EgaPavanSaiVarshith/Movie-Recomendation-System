@@ -27,7 +27,11 @@ export default function RegisterPage() {
     setError('')
     setLoading(true)
     try {
-      const res = await authAPI.register(form)
+      const res = await authAPI.register({
+        ...form,
+        preferred_genres: prefs.genres,
+        preferred_languages: prefs.languages
+      })
       setAuth(res.data.user, res.data.access_token)
       toast.success(`Welcome to CineAI, ${res.data.user.username}! 🎬`)
       navigate('/')

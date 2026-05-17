@@ -41,8 +41,8 @@ async def register(user_data: UserCreate):
         "password_hash": get_password_hash(user_data.password),
         "full_name": user_data.full_name,
         "avatar_url": None,
-        "preferred_languages": [],
-        "preferred_genres": [],
+        "preferred_languages": user_data.preferred_languages,
+        "preferred_genres": user_data.preferred_genres,
         "watchlist": [],
         "created_at": datetime.utcnow(),
     }

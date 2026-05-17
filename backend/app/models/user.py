@@ -7,6 +7,8 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str = Field(..., min_length=6)
     full_name: Optional[str] = None
+    preferred_languages: List[str] = []
+    preferred_genres: List[str] = []
 
 class UserLogin(BaseModel):
     email: EmailStr
