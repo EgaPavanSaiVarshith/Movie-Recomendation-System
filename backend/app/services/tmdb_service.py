@@ -92,11 +92,26 @@ async def get_movie_details(movie_id: int) -> dict:
             for c in cast
         ]
         
-        # Extract trailer
+        # Extract trailer with multiple fallback levels
         videos = raw.get("videos", {}).get("results", [])
+        
+        # Level 1: Look for official YouTube Trailer
         trailers = [v for v in videos if v.get("type") == "Trailer" and v.get("site") == "YouTube"]
         if trailers:
             movie["trailer_key"] = trailers[0].get("key")
+        else:
+            # Level 2: Look for Teasers, Clips, or Featurettes on YouTube
+            clips = [v for v in videos if v.get("type") in ["Teaser", "Clip", "Featurette"] and v.get("site") == "YouTube"]
+            if clips:
+                movie["trailer_key"] = clips[0].get("key")
+            else:
+                # Level 3: Look for any YouTube video
+                any_yt = [v for v in videos if v.get("site") == "YouTube"]
+                if any_yt:
+                    movie["trailer_key"] = any_yt[0].get("key")
+                else:
+                    # Level 4: Generate a high-quality YouTube search query fallback
+                    movie["trailer_key"] = f"SEARCH:{movie['title']} official trailer"
         
         # Extract OTT platforms (India & US regions)
         providers_data = raw.get("watch/providers", {}).get("results", {})

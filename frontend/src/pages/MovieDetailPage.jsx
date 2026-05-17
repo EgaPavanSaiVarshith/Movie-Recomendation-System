@@ -233,7 +233,9 @@ export default function MovieDetailPage() {
           <div className="relative w-full max-w-4xl aspect-video rounded-3xl overflow-hidden shadow-2xl border border-white/10 bg-black">
             <button onClick={() => setShowTrailer(false)} className="absolute top-4 right-4 p-2 bg-black/60 rounded-xl text-white z-20 hover:bg-white/20 transition-colors">✕</button>
             <iframe
-              src={`https://www.youtube.com/embed/${movie.trailer_key}?autoplay=1&rel=0`}
+              src={movie.trailer_key?.startsWith('SEARCH:') 
+                ? `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(movie.trailer_key.replace('SEARCH:', ''))}&autoplay=1`
+                : `https://www.youtube.com/embed/${movie.trailer_key}?autoplay=1&rel=0`}
               title={`${movie.title} Trailer`}
               className="w-full h-full border-0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
