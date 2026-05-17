@@ -1,17 +1,15 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Eye, EyeOff, Film, Mail, Lock, User, AlertCircle } from 'lucide-react'
+import { Eye, EyeOff, Film, Mail, Lock, User, AlertCircle, ArrowLeft } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { authAPI } from '../api/client'
-import { useAuthStore } from '../store'
 import toast from 'react-hot-toast'
 
-export default function LoginPage() {
-  const [form, setForm] = useState({ email: '', password: '' })
+export default function ForgotPasswordPage() {
+  const [form, setForm] = useState({ username: '', email: '', new_password: '' })
   const [showPass, setShowPass] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const { setAuth } = useAuthStore()
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
@@ -19,12 +17,11 @@ export default function LoginPage() {
     setError('')
     setLoading(true)
     try {
-      const res = await authAPI.login(form)
-      setAuth(res.data.user, res.data.access_token)
-      toast.success(`Welcome back, ${res.data.user.username}! 🎬`)
-      navigate('/')
+      await authAPI.resetPassword(form)
+      toast.success('Password reset successfully! Please sign in. 🎬')
+      navigate('/login')
     } catch (err) {
-      setError(err.response?.data?.detail || 'Login failed. Check your credentials.')
+      setError(err.response?.data?.detail || 'Reset failed. Check your username and email.')
     }
     setLoading(false)
   }
@@ -47,8 +44,8 @@ export default function LoginPage() {
               <Film size={28} className="text-red-500" />
               <span className="text-2xl font-black text-gradient">CINEAI</span>
             </Link>
-            <h1 className="text-2xl font-bold text-white">Welcome back</h1>
-            <p className="text-zinc-400 text-sm mt-1">Sign in to your account</p>
+            <h1 className="text-2xl font-bold text-white">Reset Password</h1>
+            <p className="text-zinc-400 text-sm mt-1">Enter your details to create a new password</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -57,6 +54,20 @@ export default function LoginPage() {
                 <AlertCircle size={16} /> {error}
               </div>
             )}
+
+            <div>
+              <label className="text-sm text-zinc-400 mb-1.5 block">Username</label>
+              <div className="relative">
+                <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" />
+                <input
+                  type="text" required
+                  value={form.username}
+                  onChange={e => setForm(f => ({ ...f, username: e.target.value }))}
+                  placeholder="your_username"
+                  className="input-field pl-11"
+                />
+              </div>
+            </div>
 
             <div>
               <label className="text-sm text-zinc-400 mb-1.5 block">Email</label>
@@ -73,19 +84,14 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <div className="flex justify-between items-center mb-1.5">
-                <label className="text-sm text-zinc-400 block">Password</label>
-                <Link to="/forgot-password" className="text-xs text-red-400 hover:text-red-300 font-semibold transition-colors">
-                  Forgot password?
-                </Link>
-              </div>
+              <label className="text-sm text-zinc-400 mb-1.5 block">New Password</label>
               <div className="relative">
                 <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" />
                 <input
-                  type={showPass ? 'text' : 'password'} required
-                  value={form.password}
-                  onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
-                  placeholder="••••••••"
+                  type={showPass ? 'text' : 'password'} required minLength={6}
+                  value={form.new_password}
+                  onChange={e => setForm(f => ({ ...f, new_password: e.target.value }))}
+                  placeholder="Min 6 characters"
                   className="input-field pl-11 pr-11"
                 />
                 <button type="button" onClick={() => setShowPass(s => !s)} className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white">
@@ -99,15 +105,14 @@ export default function LoginPage() {
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : 'Sign In'}
+              ) : 'Reset Password'}
             </button>
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-zinc-500 text-sm">
-              Don't have an account?{' '}
-              <Link to="/register" className="text-red-400 hover:text-red-300 font-semibold transition-colors">Create one free</Link>
-            </p>
+            <Link to="/login" className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors">
+              <ArrowLeft size={16} /> Back to Sign In
+            </Link>
           </div>
         </div>
       </motion.div>

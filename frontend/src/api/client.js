@@ -43,6 +43,7 @@ export const authAPI = {
   login: (data) => API.post('/api/auth/login', data),
   me: () => API.get('/api/auth/me'),
   logout: () => API.post('/api/auth/logout'),
+  resetPassword: (data) => API.post('/api/auth/reset-password', data),
 }
 
 // ─── Movies ───────────────────────────────────────────

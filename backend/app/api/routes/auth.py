@@ -9,7 +9,7 @@ from app.core.security import (
     get_current_user
 )
 from app.core.config import settings
-from app.models.user import UserCreate, UserLogin, UserResponse, TokenResponse
+from app.models.user import UserCreate, UserLogin, UserResponse, TokenResponse, UserResetPassword
 
 router = APIRouter()
 
@@ -71,3 +71,16 @@ async def get_me(current_user: dict = Depends(get_current_user)):
 @router.post("/logout")
 async def logout():
     return {"message": "Logged out successfully"}
+
+@router.post("/reset-password")
+async def reset_password(user_data: UserResetPassword):
+    db = get_database()
+    user = await db.users.find_one({"email": user_data.email, "username": user_data.username})
+    if not user:
+        raise HTTPException(status_code=404, detail="User with this email and username not found")
+    
+    await db.users.update_one(
+        {"_id": user["_id"]},
+        {"$set": {"password_hash": get_password_hash(user_data.new_password)}}
+    )
+    return {"message": "Password reset successfully"}
