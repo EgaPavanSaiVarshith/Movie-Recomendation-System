@@ -230,9 +230,15 @@ export default function MovieDetailPage() {
       {/* Full-screen Trailer Modal */}
       {showTrailer && movie.trailer_key && (
         <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center backdrop-blur-md p-4">
-          <div className="relative w-full max-w-4xl aspect-video rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+          <div className="relative w-full max-w-4xl aspect-video rounded-3xl overflow-hidden shadow-2xl border border-white/10 bg-black">
             <button onClick={() => setShowTrailer(false)} className="absolute top-4 right-4 p-2 bg-black/60 rounded-xl text-white z-20 hover:bg-white/20 transition-colors">✕</button>
-            <ReactPlayer url={`https://www.youtube.com/watch?v=${movie.trailer_key}`} playing={true} controls={true} width="100%" height="100%" />
+            <iframe
+              src={`https://www.youtube.com/embed/${movie.trailer_key}?autoplay=1&rel=0`}
+              title={`${movie.title} Trailer`}
+              className="w-full h-full border-0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
           </div>
         </div>
       )}
