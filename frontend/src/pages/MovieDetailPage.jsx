@@ -72,6 +72,16 @@ export default function MovieDetailPage() {
     } catch { toast.error('Could not save rating') }
   }
 
+  const handleWatchTrailer = () => {
+    if (!movie.trailer_key) return
+    if (movie.trailer_key.startsWith('SEARCH:')) {
+      const query = movie.trailer_key.replace('SEARCH:', '')
+      window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`, '_blank')
+    } else {
+      setShowTrailer(true)
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-cinema-bg pt-20">
@@ -165,7 +175,7 @@ export default function MovieDetailPage() {
             {/* Actions */}
             <div className="flex flex-wrap gap-3 mb-8">
               {movie.trailer_key && (
-                <button onClick={() => setShowTrailer(true)} className="flex items-center gap-2 bg-white text-black font-bold px-6 py-3 rounded-xl hover:bg-zinc-200 transition-all active:scale-95">
+                <button onClick={handleWatchTrailer} className="flex items-center gap-2 bg-white text-black font-bold px-6 py-3 rounded-xl hover:bg-zinc-200 transition-all active:scale-95">
                   <Play size={18} className="fill-black" /> Watch Trailer
                 </button>
               )}
