@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const isProduction = import.meta.env.PROD
-const API_BASE_URL = isProduction ? '/_/backend' : 'http://localhost:8000'
+const API_BASE_URL = isProduction ? '' : 'http://localhost:8000'
 
 const API = axios.create({
   baseURL: API_BASE_URL,
