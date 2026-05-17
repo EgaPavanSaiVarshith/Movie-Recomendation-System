@@ -127,12 +127,19 @@ async def get_trending_movies(period: str = "week") -> List[dict]:
 
 async def get_movies_by_language(language_code: str, page: int = 1) -> List[dict]:
     try:
-        data = await fetch_tmdb("/discover/movie", {
+        params = {
             "with_original_language": language_code,
             "sort_by": "popularity.desc",
             "page": page,
-            "vote_count.gte": 100
-        })
+        }
+        # Only require high vote count for global languages like English, French, Spanish, Japanese
+        if language_code in ["en", "fr", "es", "ja"]:
+            params["vote_count.gte"] = 100
+        else:
+            # Lower threshold for regional languages (Telugu, Tamil, Malayalam, Hindi, Kannada) to show a rich catalog
+            params["vote_count.gte"] = 5
+            
+        data = await fetch_tmdb("/discover/movie", params)
         return [format_movie(m) for m in data.get("results", [])]
     except Exception as e:
         print(f"Language fetch error: {e}")

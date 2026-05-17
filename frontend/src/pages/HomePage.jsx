@@ -36,6 +36,7 @@ export default function HomePage() {
   const [nowPlaying, setNowPlaying] = useState([])
   const [popular, setPopular] = useState([])
   const [topRated, setTopRated] = useState([])
+  const [teluguMovies, setTeluguMovies] = useState([])
   const [moodMovies, setMoodMovies] = useState([])
   const [selectedMood, setSelectedMood] = useState(null)
   const [activeLang, setActiveLang] = useState(null)
@@ -48,11 +49,12 @@ export default function HomePage() {
     const fetchAll = async () => {
       setLoading(true)
       try {
-        const [trendRes, nowPlayRes, popRes, topRes] = await Promise.all([
+        const [trendRes, nowPlayRes, popRes, topRes, teluguRes] = await Promise.all([
           moviesAPI.trending('week'),
           moviesAPI.nowPlaying(),
           moviesAPI.popular(),
           moviesAPI.topRated(),
+          moviesAPI.byLanguage('telugu'),
         ])
         const trendMovies = trendRes.data.movies || []
         setTrending(trendMovies)
@@ -60,6 +62,7 @@ export default function HomePage() {
         setNowPlaying(nowPlayRes.data.movies || [])
         setPopular(popRes.data.movies || [])
         setTopRated(topRes.data.movies || [])
+        setTeluguMovies(teluguRes.data.movies || [])
       } catch (err) { console.error(err) }
       setLoading(false)
     }
@@ -227,6 +230,9 @@ export default function HomePage() {
 
         {/* Trending */}
         <MovieRow title="🔥 Trending This Week" movies={trending} loading={loading} badge="LIVE" />
+
+        {/* Dedicated Telugu row */}
+        <MovieRow title="🌟 Superhit Telugu Movies" movies={teluguMovies} loading={loading} badge="TOLLYWOOD" />
 
         {/* Now Playing */}
         <MovieRow title="🎬 New Releases In Theaters" movies={nowPlaying} loading={loading} badge="NEW" />
